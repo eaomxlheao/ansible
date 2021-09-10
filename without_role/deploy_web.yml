@@ -1,0 +1,33 @@
+---
+- hosts: web2
+  become: yes
+  become_user: root
+  gather_facts: no
+  vars:
+      server_port: 8090
+
+  tasks:
+    - name: "Install the Package"
+      apt:
+        name: nginx
+        state: present
+    - name: "Stop service"
+      service:
+        name: nginx
+        state: stopped
+    - name: "Update Configurations"
+      template:
+        src: port.j2
+        dest: /etc/nginx/sites-enabled/default
+    - name: "Start service"
+      service:
+        name: nginx
+        state: started
+    #- name: "Stop service"
+    #  service:
+    #    name: nginx
+    #    state: stopped
+    #- name: "Remove the Package"
+    #  apt:
+    #    name: nginx
+    #    state: absent
